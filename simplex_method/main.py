@@ -4,7 +4,7 @@ import numpy as np
 def test_simplex():
     input_array = np.array([[25, -3, 5], [30, -2, 5], [10, 1, 0], [6, 3, -8], [0, -6, -5]])
 
-    result = []
+    result = [0, 0]
     s = Simplex(input_array)
     table_result = s.calculate(result)
 
