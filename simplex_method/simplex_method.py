@@ -44,10 +44,10 @@ class Simplex():
             self.table = new_table
 
         for i in range(0, len(result)):
-            k = self.basis.index(i + 1)
-            if k != -1:
+            try:
+                k = self.basis.index(i + 1)
                 result[i] = self.table[k, 0]
-            else:
+            except ValueError:
                 result[i] = 0
         return self.table
 
