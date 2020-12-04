@@ -3,10 +3,16 @@ from bayes_opt.logger import JSONLogger
 from bayes_opt.event import Events
 import json
 
-def styblinski_tang(x,y):
-    return -0.5*((x**4 - 16*x**2 + 5*x) + (y**4 - 16*y**2 + 5*y))
+def styblinski_tang(**args):
+    f = 0
+    for i in args:
+        x = args[i]
+        f += x ** 4 - 16 * x ** 2 + 5 * x
+    return -0.5 * f
 
-pbounds = {'x': (-5, 5), 'y': (-5, 5)}
+pbounds = {}
+for i in range(20):
+    pbounds['x' + str(i)] = (-5, 5)
 
 
 optimizer = BayesianOptimization(
@@ -14,28 +20,29 @@ optimizer = BayesianOptimization(
     pbounds=pbounds,
     random_state=1,
 )
-logger = JSONLogger(path="./logs.json")
+logger = JSONLogger(path="./logs20.json")
 optimizer.subscribe(Events.OPTIMIZATION_STEP, logger)
 
 optimizer.maximize(
     init_points=2,
-    n_iter=30,
+    n_iter=150,
 )
 
 print(styblinski_tang(-2.903, -2.903))
 
 def parse():
-    x_points = []
-    y_points = []
+    X = []
     target = []
-    with open("./logs.json", "r") as read_file:
+    with open("./logs20.json", "r") as read_file:
         for line in read_file.readlines():
             data = json.loads(line)
             points = data['params']
+            # print(points)
+            temp = []
+            for i in range(len(points)):
+                temp.append(points['x' + str(i)])
+            X.append(temp)
             target.append(data['target'])
-            x_points.append(points['x'])
-            y_points.append(points['y'])
-    print(len(x_points), len(y_points), len(target))
-    print(x_points)
-    print(y_points)
+    print(len(X), len(target))
+    print(X)
     print(target)
