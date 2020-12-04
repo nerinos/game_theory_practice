@@ -104,13 +104,13 @@ def anim_plot_2d(x, y, split_, max_):
         plt.savefig('figure-' + str(i) + '.png')
 
 
-def convergence(x, y, z):
+def convergence(x_):
     z_f = np.zeros(len(x))
-    max_now = np.abs(np.argmax(z))
+    max_now = np.abs(np.argmax(x_))
     for i in range(len(x)):
         if i == 0:
-            z[i] = max_now
-        temp = np.abs(z[i] - z[i-1])
+            z_f[i] = max_now
+        temp = np.abs(np.linalg.norm(x_[i]) - np.linalg.norm(x_[i-1]))
         if max_now < temp:
             z_f[i] = max_now
         else:

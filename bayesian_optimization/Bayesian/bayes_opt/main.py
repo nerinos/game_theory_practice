@@ -9,7 +9,7 @@ def styblinski_tang(x, y):
     """Function with unknown internals we wish to maximize.
 
     This is just serving as an example, for all intents and
-    purposes think of the internals of this function, i.e.: the process
+    purposes think of the inte  rnals of this function, i.e.: the process
     which generates its output values, as unknown.
     """
 
