@@ -35,6 +35,7 @@ def parse(file_name):
     # print(target)
     return x_points, y_points, target
 
+
 def plotting(x,y,z):
     fig = plt.figure()
     ax = plt.axes(projection='3d')
@@ -60,6 +61,49 @@ def plotting(x,y,z):
     plt.show()
 
 
+def anim_plot(x,y,z, split_, max_):
+    fig = plt.figure()
+    const_ = round(len(x)*max_/split_)
+    for i in range(split_):
+        print(i * const_,  (i + 1) * const_)
+        x_temp = x[0: (i + 1) * const_]
+        y_temp = y[0: (i + 1) * const_]
+        z_temp = z[0: (i + 1) * const_]
+
+        for j in range(len(x_temp)):
+            z[j] = styblinski_tang(x_temp[j], y_temp[j])
+
+        print(x, '\n', x_temp)
+
+        ax = plt.axes(projection='3d')
+
+        x_f = np.linspace(-5, 5, 100)
+        y_f = np.linspace(-5, 5, 100)
+        x_fm, y_fm = np.meshgrid(x_f, y_f)
+        z_f = styblinski_tang(x_fm, y_fm)
+
+        # for i in range(100):
+        #     for j in range(100):
+        #         z_f[i,j] = styblinski_tang(x_fm[i], y_fm[j])
+
+        ax.plot_surface(x_fm, y_fm, z_f, rstride=1, cstride=1,
+                        cmap='viridis', edgecolor='none')
+
+        ax.scatter3D(x_temp, y_temp, z_temp, c=z_temp, cmap='OrRd')
+        plt.title('Styblinsky Tang function')
+        plt.show()
+
+
+def anim_plot_2d(x, y, split_, max_):
+    const_ = round(len(x) * max_ / split_)
+    for i in range(split_):
+        print(i * const_, (i + 1) * const_)
+        x_temp = x[0: (i + 1) * const_]
+        y_temp = y[0: (i + 1) * const_]
+        plt.plot(x_temp, y_temp, 'ro')
+        plt.savefig('figure-' + str(i) + '.png')
+
+
 def convergence(x, y, z):
     z_f = np.zeros(len(x))
     max_now = np.abs(np.argmax(z))
@@ -76,6 +120,7 @@ def convergence(x, y, z):
     x_f = np.linspace(0, len(x)-1, len(x))
 
     plt.plot(x_f, z_f)
+    plt.title('Convergence')
     plt.show()
 
 
@@ -99,4 +144,6 @@ def convergence_to_actual(x, y, z):
 
 
 x,y,z = parse("./logs300.json")
-convergence_to_actual(x,y,z)
+# convergence(x,y,z)
+
+anim_plot_2d(x,y, 10, 0.3)
